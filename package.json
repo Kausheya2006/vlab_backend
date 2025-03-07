@@ -1,0 +1,20 @@
+{
+  "name": "vlab_backend",
+  "version": "1.0.0",
+  "description": "Backend for Virtual Labs",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node index.js -p 8080",
+    "start": "node index.js -p 8080"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.18.2",
+    "express-session": "^1.18.1",
+    "mongoose": "^8.12.1",
+    "node-fetch": "^3.3.2"
+  }
+}
