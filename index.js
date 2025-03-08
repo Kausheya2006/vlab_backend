@@ -8,15 +8,28 @@ import apiRoutes from "./api/routes.js"; // Centralized API route handler
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 8080;
 
 // Middleware
-app.use(express.json());
+// Middleware
 app.use(cors({
-  origin: "http://localhost:3000", // ✅ Allow requests from frontend
+  origin: "*", // ✅ Allows all origins
   methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true, // ✅ If using cookies/sessions
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: false,
 }));
+
+app.use(express.json()); // ✅ Fix: Enables JSON parsing
+app.use(express.urlencoded({ extended: true })); // ✅ Parses form data
+
+// ✅ Add session middleware before routes
+app.use(session({
+  secret: "your-secret-key",
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
+
 
 // ✅ Add session middleware before routes
 app.use(session({
