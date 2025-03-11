@@ -43,25 +43,35 @@ app.use(session({
 connectDb();
 console.log("MongoDB URI:", process.env.MONGO_URI);
 
-// WebSocket connection handling
+// 🔥 WebSocket connection handling
 io.on("connection", (socket) => {
   console.log("🔥 User connected:", socket.id);
 
-  // You can handle events here
-  socket.on("disconnect", () => {
-    console.log("❌ User disconnected:", socket.id);
-  });
-
-  // You can also listen to custom events like this:
+  // Handle comment events
   socket.on("sendComment", (data) => {
     console.log("💬 New Comment Received:", data);
-    // Emit an event for all connected users
     io.emit("newComment", data);
+  });
+
+  // 🟢 Interactive Box Feature (Real-Time Box Movement)
+  let boxPosition = { x: 100, y: 100 }; // Store the last known box position
+
+  // Send current position to newly connected users
+  socket.emit("boxPosition", boxPosition);
+
+  // Listen for box movement events
+  socket.on("moveBox", (newPosition) => {
+    boxPosition = newPosition;
+    io.emit("boxPosition", newPosition); // Broadcast to all active users
+  });
+
+  socket.on("disconnect", () => {
+    console.log("❌ User disconnected:", socket.id);
   });
 });
 
 // Attach WebSocket instance to Express app
-app.set("io", io); // Making io available globally
+app.set("io", io);
 
 // Use all API routes under /api
 app.use("/api", apiRoutes);
